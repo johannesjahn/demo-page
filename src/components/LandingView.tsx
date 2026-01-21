@@ -6,6 +6,8 @@ export function LandingView() {
     const [isClicked, setIsClicked] = useState(false);
     const [title, setTitle] = useState('ANTIGRAVITY');
     const [description, setDescription] = useState('Redefining the digital frontier with immersive experiences.');
+    const [dialogMessage, setDialogMessage] = useState('Initializing system core...');
+    const [showDialog, setShowDialog] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -17,6 +19,9 @@ export function LandingView() {
                 }
                 if (data.description) {
                     setDescription(data.description);
+                }
+                if (data.message) {
+                    setDialogMessage(data.message);
                 }
             })
             .catch(err => console.error('Failed to load title:', err));
@@ -38,6 +43,7 @@ export function LandingView() {
     const handleClick = () => {
         setIsClicked(true);
         setTimeout(() => setIsClicked(false), 500);
+        setShowDialog(true);
     };
 
     return (
@@ -52,6 +58,42 @@ export function LandingView() {
 
             {/* Grid Pattern */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px] pointer-events-none" />
+
+            {/* Dialog Overlay */}
+            {showDialog && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-300"
+                    onClick={() => setShowDialog(false)}
+                >
+                    <div
+                        className="relative max-w-lg w-full bg-[#0a0a0a] border border-white/10 rounded-2xl p-8 shadow-[0_0_50px_-12px_rgba(124,58,237,0.5)] transform animate-in zoom-in-95 duration-300 overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Decorative background elements */}
+                        <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-cyan-500 via-purple-500 to-pink-500" />
+                        <div className="absolute -top-24 -right-24 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl" />
+                        <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-cyan-500/20 rounded-full blur-3xl" />
+
+                        <div className="relative">
+                            <h2 className="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-purple-500 flex items-center gap-2">
+                                <Zap className="w-6 h-6 text-cyan-400" />
+                                System Message
+                            </h2>
+
+                            <p className="text-zinc-300 text-lg leading-relaxed mb-8 border-l-2 border-purple-500/30 pl-4 py-1">
+                                {dialogMessage}
+                            </p>
+
+                            <button
+                                onClick={() => setShowDialog(false)}
+                                className="w-full py-3 px-6 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                            >
+                                Yes!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <main
                 className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 perspective-1000"
